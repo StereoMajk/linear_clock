@@ -35,10 +35,13 @@ unit_hours_pixels = [7, 6, 28, 5, 4, 30, 3, 2, 32]
 tens_minutes_pixels= [11,10, 24, 9,8,26]
 unit_minutes_pixels = [17, 16, 18, 15, 14, 20, 13, 12, 22]
 while True:
-    hour_tens = int(ntp.datetime.tm_hour / 10)
-    hour_units = int(ntp.datetime.tm_hour % 10)
-    minutes_tens = int(ntp.datetime.tm_min / 10)
-    minutes_units = int(ntp.datetime.tm_min % 10)
+    pixels.fill((0,0,0))
+    hours = ntp.datetime.tm_hour
+    mins = ntp.datetime.tm_min
+    hour_tens = int(hours / 10)
+    hour_units = int(hours % 10) 
+    minutes_tens = int(mins / 10)
+    minutes_units = int(mins % 10)
     for x in range(hour_tens):
         pixels[tens_hours_pixels[x]] = (255,255,0)
     for x in range(hour_units):
@@ -48,5 +51,5 @@ while True:
     for x in range(minutes_units):
         pixels[unit_minutes_pixels[x]] = (0,0,255)   
     pixels.show()
-    print(ntp.datetime)
+    #print(ntp.datetime)
     time.sleep(1)
