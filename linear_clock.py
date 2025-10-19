@@ -6,6 +6,7 @@ import neopixel
 import socketpool
 import wifi
 import adafruit_ntp
+import rtc
 
 pixel_pin = board.GP0
 num_pixels = 35
@@ -34,10 +35,19 @@ tens_hours_pixels = [1, 0, 34]
 unit_hours_pixels = [7, 6, 28, 5, 4, 30, 3, 2, 32]
 tens_minutes_pixels= [11,10, 24, 9,8,26]
 unit_minutes_pixels = [17, 16, 18, 15, 14, 20, 13, 12, 22]
+
+now = time.localtime()
+try:
+    rtc.RTC().datetime = ntp.datetime
+    print(f"Initial Synchronize: {ntp.datetime}")
+    time.sleep(1)
+except OSError as e:
+    print(f"RTC or NTP Error: {e}")
+    
 while True:
-    pixels.fill((0,0,0))
-    hours = ntp.datetime.tm_hour
-    mins = ntp.datetime.tm_min
+    now = time.localtime()
+    hours = now.tm_hour
+    mins = now.tm_min
     hour_tens = int(hours / 10)
     hour_units = int(hours % 10) 
     minutes_tens = int(mins / 10)
@@ -53,3 +63,12 @@ while True:
     pixels.show()
     #print(ntp.datetime)
     time.sleep(1)
+
+    if hours == "00" and mins == "00":
+        try:
+            rtc.RTC().datetime = ntp.datetime
+            print(f"Synchronized Time: {current_datestamp}")
+            time.sleep(1)
+        except OSError as e:
+            print(f"RTC or NTP Error: {e}")
+
